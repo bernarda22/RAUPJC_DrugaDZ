@@ -4,8 +4,8 @@ using System.Linq;
 
 namespace KonzolnaAplikacija
 {
-    class Program
-    {
+    class Program { 
+    
         static void Main(string[] args)
         {
             //Treći zadatak
@@ -20,8 +20,21 @@ namespace KonzolnaAplikacija
             University[] universities = GetAllCroatianUniversities();
 
             Student[] allCroatianStudents = universities.SelectMany(student => student.Students).Distinct().ToArray();
-            Student[] croatianStudentsOnMultipleUniversities = universities.SelectMany(r => new University[] { r.Name, r.Students }).ToArray();
-            //Student[] multiplestudents = universities.SelectMany(student => student.Students).Where(student => student.Jmbag.Count() > 1).ToArray();
+            Student[] croatianStudentsOnMultipleUniversities = universities
+                .SelectMany(student => student.Students)
+                .GroupBy(student => student)
+                .Where(studentGroup => studentGroup.Count() > 1 )
+                .Select(studentGroup => studentGroup.First())
+                .ToArray();
+
+            Student[] multiplestudents = universities
+                .Where(university => university.Students.Where(student => student.Gender == Gender.Female).Count() == 0)
+                .SelectMany(university => university.Students)
+                .Distinct()
+                .ToArray();    
+
+            Console.In.ReadLine();
+            
         }
 
         private static University[] GetAllCroatianUniversities()
@@ -39,9 +52,9 @@ namespace KonzolnaAplikacija
         {
             var list = new List<Student>()
             {
-                new Student ("David", jmbag: "003647182"),
-                new Student ("Mihael", jmbag: "003745689"),
-                new Student ("Mirta", jmbag: "003645213")
+                new Student ("David", jmbag: "003647182", gender: Gender.Male),
+                new Student ("Mihael", jmbag: "003745689", gender: Gender.Female),
+                new Student ("Mirta", jmbag: "003645213", gender: Gender.Female)
             };
             return list.ToArray();
         }
@@ -50,9 +63,10 @@ namespace KonzolnaAplikacija
         {
             var list = new List<Student>()
             {
-                new Student ("Rafael", jmbag: "003589652"),
-                new Student ("Marijana", jmbag: "004568712"),
-                new Student ("Benjamin", jmbag: "003648954")
+                new Student ("Rafael", jmbag: "003589652", gender: Gender.Male),
+                new Student ("Marijana", jmbag: "004568712", gender: Gender.Female),
+                new Student ("Benjamin", jmbag: "003648954", gender: Gender.Male),
+                new Student ("Mirta", jmbag: "003645213", gender: Gender.Female)
             };
             return list.ToArray();
         }
@@ -61,9 +75,9 @@ namespace KonzolnaAplikacija
         {
             var list = new List<Student>()
             {
-                new Student ("Ivana", jmbag: "003512342"),
-                new Student ("Luka", jmbag: "004568962"),
-                new Student ("Mihael", jmbag: "003745689")
+                new Student ("Luka", jmbag: "004568962", gender: Gender.Male),
+                new Student ("Mihael", jmbag: "003745689", gender: Gender.Male),
+                new Student ("Rafael", jmbag: "003589652", gender: Gender.Male)
             };
             return list.ToArray();
         }

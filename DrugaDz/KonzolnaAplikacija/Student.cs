@@ -12,6 +12,13 @@
             Jmbag = jmbag;
         }
 
+        public Student(string name, string jmbag, Gender gender)
+        {
+            Name = name;
+            Jmbag = jmbag;
+            Gender = gender;
+        }
+
         public override bool Equals(object obj)
         {
             var item = obj as Student;
